@@ -1,0 +1,11 @@
+{
+	"rules": {
+		"Bank-withdraw()": "SUCCESS",
+		"Bank-withdraw_with_inv_assumed()": "SUCCESS",
+		"Bank-deposit()": "SUCCESS"
+	},
+
+	"assertMessages": {
+
+	}
+}

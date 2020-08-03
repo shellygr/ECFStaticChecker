@@ -1,0 +1,11 @@
+{
+	"rules": {
+		"Example_5_nonECF-f2()": "SUCCESS",
+		"Example_5_nonECF-f1()": "SUCCESS",
+		"Example_5_nonECF-main()": "FAIL"
+	},
+
+	"assertMessages": {
+
+	}
+}

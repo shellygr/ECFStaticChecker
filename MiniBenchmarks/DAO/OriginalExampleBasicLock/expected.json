@@ -1,0 +1,10 @@
+{
+	"rules": {
+		"Bank-withdraw()": "SUCCESS",
+		"Bank-deposit()": "SUCCESS"
+	},
+
+	"assertMessages": {
+
+	}
+}

@@ -1,0 +1,1 @@
+certoraRun.py OriginalExample.sol:Bank  --ecf Bank --settings -json=out.json,-ecfJson=ecf.ecfout.json --solc solc5.12

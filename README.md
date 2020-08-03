@@ -44,8 +44,10 @@ Parameters that can be tweaked in the `ecf` script are:
 TODO
 
 ##### Mini benchmarks
+TODO: Rewrite run.sh scripts in all subfolders and double check the expected.json
 
 ##### Top150 benchmark
+TODO: Prepare the run script based on clara5
 
 ### Running the comparative benchmarks
 

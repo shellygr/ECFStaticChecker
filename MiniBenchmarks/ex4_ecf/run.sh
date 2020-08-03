@@ -1,0 +1,1 @@
+certoraRun.py ex4_ECF.sol:Example_4_ECF --ecf Example_4_ECF --solc solc5.12

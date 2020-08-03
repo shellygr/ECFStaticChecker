@@ -1,0 +1,10 @@
+{
+	"rules": {
+		"Example_8_ECF-f1()": "SUCCESS",
+		"Example_8_ECF-main()": "SUCCESS"
+	},
+
+	"assertMessages": {
+
+	}
+}
