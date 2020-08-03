@@ -22,9 +22,14 @@ The VM comes packaged with:
 
 **Install the artifact from https://www.cs.tau.ac.il/~shellygr/vms/ECFStaticChecker.ova**
 
-### Running the artifact
+### Background information
+The artifact implements the ECF static check by implementing the algorithm whose pseudo-code is shown in Figure 6 of the submission.
+The actual implementation contains more steps of preprocessing the contract bytecode, some standard static analysis algorithms and optimizations, as described in Section 7 of the submission.
 
-#### General instructions
+The output produced will say for each function if it is ECF or not.
+An additional output JSON file will provide additional information about each callnode analyzed and a list of functions that left-move or right-move with respect to that callnode. (See Definitions 4.10, 4.11.)
+
+#### General run instructions
 To run the artifact on a bytecode file `FILE`, run the following command:
 ```ecf FILE```
 To run on a solidity file `FILE.sol`:
@@ -35,19 +40,31 @@ If another version is required it can be fetched from the releases page of the S
 #### Tweaking parameters
 Parameters that can be tweaked in the `ecf` script are:  
 - `-t` - timeout per SMT query. Default is 600 seconds.
-- `TODO` - timeout per callnode (see Section TODO for definition of callnode). Default is TODO .
-- `TODO` - global time for the tool to run. Default is TODO .
-- `TODO` - TODO
+- `ecfMaxTimePerCallnodeMinutes` - timeout per callnode (see Section 5 for definition of callnode). Default is 30 minutes.
+- `ecfMaxTimePerMultiCallnodeCheckMinutes` - timeout for the multi-callnode phase (see Section 5 in the paper). Default is 30 minutes.
+
 
 
 #### Step-by-step guide
-TODO
 
 ##### Mini benchmarks
+The mini benchmarks consist of:
+- 8 ECF examples: `exN_ecf` for `N` in 1-8.
+- 7 non-ECF examples: `exN_non_ECF` for `N` in 1-7.
+- 3 pairs (total: 6) of examples based on the DAO hack, where each is illustrating a different fix.
+  - `DAO/OriginalExample` and `DAO/OriginalExampleFix` - the example from Figure 2 and the line-reordering fix.
+  - `DAO/OriginalExampleBasicLock` and `DAO/OriginalExampleBasicLockBroken` - the fix based on Figure 5 and a mutation that breaks the fix and makes it non-ECF.
+  - `DAO/OriginalExampleMonotoneLock` and `DAO/OriginalExampleMonotoneLockBroken` - a fix based on increasing counter lock and a mutation that break the fix and makes it non-ECF. 
+- An example illustrating the special revert handling described in Appendix A: `TODO`
 TODO: Rewrite run.sh scripts in all subfolders and double check the expected.json
 
 ##### Top150 benchmark
 TODO: Prepare the run script based on clara5
+To run on any individual contract from the Top150 benchmark, run:
+```
+```
+Running on all 150 contracts takes a long time.
+
 
 ### Running the comparative benchmarks
 
@@ -70,7 +87,7 @@ slither FILE.SOL --detect reentrancy-eth,reentrancy-no-eth,reentrancy-benign,ree
 ```
 with `X.YY` standing for the Solidity version.
 
-- To run _Slither_ on the contracts in the Minibenchmark, run:
+- To run _Slither_ on the contracts in the mini benchmark set, run:
 ```
 ```
 
@@ -88,7 +105,7 @@ Securify2 only supports contracts compiled with Solidity versions 0.5.8 and abov
 sudo docker run -it -v PATH_TO_CONTRACTS:/share securify /share/CONTRACT_FILE.sol
 ```
 
-- To run _Securify2_ on all of the MiniBenchmarks, use:  
+- To run _Securify2_ on all of the mini benchmarks, use:  
 ```
 sudo docker run -it -v ~/ecf/MiniBenchmarks:/share securify /share/ex1_ecf/ex1_ECF.sol >& securify.1ecf.txt
 sudo docker run -it -v ~/ecf/MiniBenchmarks:/share securify /share/ex2_ecf/ex2_ECF.sol >& securify.2ecf.txt
@@ -116,14 +133,14 @@ sudo docker run -it -v ~/ecf/MiniBenchmarks/DAO:/share securify /share/OriginalE
 
 - To run _Securify2_ on the subset of compatible contracts out of the Top150 benchmark, run:
 ```
-sudo docker run -it -v ~/ecf/Top150:/share securify /share/0x174bfa6600bf90c885c7c01c7031389ed1461ab9.sol >& securify.0x174bfa6600bf90c885c7c01c7031389ed1461ab9.txt 
-sudo docker run -it -v ~/ecf/Top150:/share securify /share/0x5e07b6f1b98a11f7e04e7ffa8707b63f1c177753.sol >& securify.0x5e07b6f1b98a11f7e04e7ffa8707b63f1c177753.txt 
-sudo docker run -it -v ~/ecf/Top150:/share securify /share/0xbf5f8bfcee9502a30018d91c63eca66980e6e9bb.sol >& securify.0xbf5f8bfcee9502a30018d91c63eca66980e6e9bb.txt  
-sudo docker run -it -v ~/ecf/Top150:/share securify /share/0xd7cc16500d0b0ac3d0ba156a584865a43b0b0050.sol >& securify.0xd7cc16500d0b0ac3d0ba156a584865a43b0b0050.txt
-sudo docker run -it -v ~/ecf/Top150:/share securify /share/0x2e65e12b5f0fd1d58738c6f38da7d57f5f183d1c.sol >& securify.0x2e65e12b5f0fd1d58738c6f38da7d57f5f183d1c.txt  
-sudo docker run -it -v ~/ecf/Top150:/share securify /share/0x931abd3732f7eada74190c8f89b46f8ba7103d54.sol >& securify.0x931abd3732f7eada74190c8f89b46f8ba7103d54.txt  
-sudo docker run -it -v ~/ecf/Top150:/share securify /share/0xcafe27178308351a12fffffdeb161d9d730da082.sol >& securify.0xcafe27178308351a12fffffdeb161d9d730da082.txt
-sudo docker run -it -v ~/ecf/Top150:/share securify /share/0x5b8174e20996ec743f01d3b55a35dd376429c596.sol >& securify.0x5b8174e20996ec743f01d3b55a35dd376429c596.txt  
-sudo docker run -it -v ~/ecf/Top150:/share securify /share/0x999999c60566e0a78df17f71886333e1dace0bae.sol >& securify.0x999999c60566e0a78df17f71886333e1dace0bae.txt 
-sudo docker run -it -v ~/ecf/Top150:/share securify /share/0xd5dc8921a5c58fb0eba6db6b40eab40283dc3c01.sol >& securify.0xd5dc8921a5c58fb0eba6db6b40eab40283dc3c01.txt
+sudo docker run -it -v ~/ecf/Top150Benchmarks:/share securify /share/0x174bfa6600bf90c885c7c01c7031389ed1461ab9.sol >& securify.0x174bfa6600bf90c885c7c01c7031389ed1461ab9.txt 
+sudo docker run -it -v ~/ecf/Top150Benchmarks:/share securify /share/0x5e07b6f1b98a11f7e04e7ffa8707b63f1c177753.sol >& securify.0x5e07b6f1b98a11f7e04e7ffa8707b63f1c177753.txt 
+sudo docker run -it -v ~/ecf/Top150Benchmarks:/share securify /share/0xbf5f8bfcee9502a30018d91c63eca66980e6e9bb.sol >& securify.0xbf5f8bfcee9502a30018d91c63eca66980e6e9bb.txt  
+sudo docker run -it -v ~/ecf/Top150Benchmarks:/share securify /share/0xd7cc16500d0b0ac3d0ba156a584865a43b0b0050.sol >& securify.0xd7cc16500d0b0ac3d0ba156a584865a43b0b0050.txt
+sudo docker run -it -v ~/ecf/Top150Benchmarks:/share securify /share/0x2e65e12b5f0fd1d58738c6f38da7d57f5f183d1c.sol >& securify.0x2e65e12b5f0fd1d58738c6f38da7d57f5f183d1c.txt  
+sudo docker run -it -v ~/ecf/Top150Benchmarks:/share securify /share/0x931abd3732f7eada74190c8f89b46f8ba7103d54.sol >& securify.0x931abd3732f7eada74190c8f89b46f8ba7103d54.txt  
+sudo docker run -it -v ~/ecf/Top150Benchmarks:/share securify /share/0xcafe27178308351a12fffffdeb161d9d730da082.sol >& securify.0xcafe27178308351a12fffffdeb161d9d730da082.txt
+sudo docker run -it -v ~/ecf/Top150Benchmarks:/share securify /share/0x5b8174e20996ec743f01d3b55a35dd376429c596.sol >& securify.0x5b8174e20996ec743f01d3b55a35dd376429c596.txt  
+sudo docker run -it -v ~/ecf/Top150Benchmarks:/share securify /share/0x999999c60566e0a78df17f71886333e1dace0bae.sol >& securify.0x999999c60566e0a78df17f71886333e1dace0bae.txt 
+sudo docker run -it -v ~/ecf/Top150Benchmarks:/share securify /share/0xd5dc8921a5c58fb0eba6db6b40eab40283dc3c01.sol >& securify.0xd5dc8921a5c58fb0eba6db6b40eab40283dc3c01.txt
 ```
