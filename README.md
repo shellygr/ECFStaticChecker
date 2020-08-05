@@ -1,10 +1,10 @@
 ﻿# Artifact for the paper "Taming Callbacks for Smart Contract Modularity"
 
-## ECF Static checker
+## ECF static checker
 This document describes how to run the ECF Checker installed in the VM provided.
 The ECF Checker analyzes EVM bytecode and may accept either raw bytecode or Solidity files.
 
-### VM Contents
+### VM contents
 
 Credentials:
 - username: **ecf**
@@ -13,8 +13,8 @@ Credentials:
 
 The VM comes packaged with:
 
-- The tool. 
-- Solidity compiler versions 0.4.25, 0.5.16, 0.6.12.
+- The tool (a JAR file and 3 auxiliary Python scripts). 
+- Solidity compiler versions `0.4.25`, `0.5.16`, `0.6.12`.
 - A set of mini-benchmarks.
 - A set of real benchmarks as given in Section 7 of the submission.
 - Installations of competing tools _Securify2_ and _Slither_ (via docker).
@@ -55,13 +55,15 @@ The mini benchmarks consist of:
   - `DAO/OriginalExample` and `DAO/OriginalExampleFix` - the example from Figure 2 and the line-reordering fix.
   - `DAO/OriginalExampleBasicLock` and `DAO/OriginalExampleBasicLockBroken` - the fix based on Figure 5 and a mutation that breaks the fix and makes it non-ECF.
   - `DAO/OriginalExampleMonotoneLock` and `DAO/OriginalExampleMonotoneLockBroken` - a fix based on increasing counter lock and a mutation that break the fix and makes it non-ECF. 
-- An example illustrating the special revert handling described in Appendix A: `TODO`
-TODO: Rewrite run.sh scripts in all subfolders and double check the expected.json
+- An example illustrating the special revert handling described in Appendix A: `DAO/OriginalExampleJustifyRevertsInSuffix`
+
+Each one of the subdirectories in `~/ecf/MiniBenchmarks` contains a runner script `run.sh` and an `expected.json` file.
 
 ##### Top150 benchmark
 TODO: Prepare the run script based on clara5
 To run on any individual contract from the Top150 benchmark, run:
 ```
+TODO
 ```
 Running on all 150 contracts takes a long time.
 
