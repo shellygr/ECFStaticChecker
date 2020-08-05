@@ -60,10 +60,9 @@ The mini benchmarks consist of:
 Each one of the subdirectories in `~/ecf/MiniBenchmarks` contains a runner script `run.sh` and an `expected.json` file.
 
 ##### Top150 benchmark
-TODO: Prepare the run script based on clara5
 To run on any individual contract from the Top150 benchmark, run:
 ```
-TODO
+ecf Top150Benchmarks/XXX.bin-runtime
 ```
 Running on all 150 contracts takes a long time.
 
