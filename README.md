@@ -4,8 +4,10 @@
 This document describes how to run the ECF Checker.
 The ECF Checker analyzes EVM bytecode and may accept either raw bytecode or Solidity files.
 
-**The tool is provided as a docker image available from: shellyg/ecf-static-checker**
+**The tool is provided as a docker image available from: shellyg/ecf-static-checker (tag 1)**
+
 To get the tool, run: `docker pull shellyg/ecf-static-checker`
+
 To start the container run: `docker run -it shellyg/ecf-static-checker`.
 
 The container comes packaged with:
@@ -60,9 +62,9 @@ However sources fetched from https://etherscan.com are flattened and thus the bu
 
 #### Tweaking parameters
 Parameters that can be tweaked in the `ecf` script are:  
-- `-t` - timeout per SMT query. Default is 600 seconds.
-- `ecfMaxTimePerCallnodeMinutes` - timeout per callnode (see Section 5 for definition of callnode). Default is 30 minutes.
-- `ecfMaxTimePerMultiCallnodeCheckMinutes` - timeout for the multi-callnode phase (see Section 5 in the paper). Default is 30 minutes.
+- `-t` - timeout per SMT query. Default is 600 (seconds).
+- `ecfMaxTimePerCallnodeMinutes` - timeout per callnode (see Section 5 for definition of callnode). Default is 30 (minutes).
+- `ecfMaxTimePerMultiCallnodeCheckMinutes` - timeout for the multi-callnode phase (see Section 5 in the paper). Default is 30 (minutes).
 
 
 
@@ -78,7 +80,8 @@ The mini benchmarks consist of:
   - `DAO/OriginalExampleBasicLock` and `DAO/OriginalExampleBasicLockBroken` - the fix based on Figure 5 and a mutation that breaks the fix and makes it non-ECF.
   - `DAO/OriginalExampleMonotoneLock` and `DAO/OriginalExampleMonotoneLockBroken` - a fix based on increasing counter lock and a mutation that break the fix and makes it non-ECF. 
      The corrected code can be proven using a callback invariant as shown in Section 6. Note, however, that the implementation given in this artifact cannot express the callback invariant that proves the fix correct, since it cannot refer to local variables of a method.
-- An example illustrating the special revert handling described in Appendix A: `DAO/OriginalExampleJustifyRevertsInSuffix`. In this example, `withdraw_with_inv_assumed` is ECF, but `withdraw` cannot be proven ECF without applying the technique described in Appendix A. The output of the tool shows that the right movement check succeeds, that is thanks to implementing it.
+- An example illustrating the special revert handling described in Appendix A: `DAO/OriginalExampleJustifyRevertsInSuffix`. In this example, `withdraw_with_inv_assumed` is ECF, but `withdraw` cannot be proven ECF without applying the technique described in Appendix A. 
+The output of the tool shows that the right movement check succeeds, since it implements the technique in Appendix A.
 
 Each one of the subdirectories in `~/ecf/MiniBenchmarks` contains a runner script `run.sh` to run the example with the tool, and an `expected.json` file that can be used to compare the actual results to expected results.
 
@@ -132,7 +135,7 @@ Results for MiracleTeleToken:
     Result for MiracleTeleToken-unDelegate(uint8,bytes32,bytes32): X
     Result for MiracleTeleToken-delegate(uint8,bytes32,bytes32): X
 ```
-Where it becomes clear the two suspected non-ECF functions are `unDelegate` and `delegate`. (These methods would be vulnerable if precompiled contracts allowed reentrancy, which is not the case).
+Here it becomes clear that the two suspected non-ECF functions are `unDelegate` and `delegate`. (These methods would be vulnerable if precompiled contracts allowed reentrancy, which is not the case.)
 
 ### Running the comparative benchmarks
 Simple installation instructions using docker are provided below.
@@ -150,7 +153,7 @@ To run _Slither_, first run the docker:
 ```
 docker run -it -v ECF_DIR:/share trailofbits/eth-security-toolbox
 ```
-and in the container, run:  [TODO Optional?]
+and in the container, run:
 ```
 sudo chmod -R 755 /share
 ```
@@ -185,12 +188,13 @@ cd securify2
 sudo docker build -t securify .
 ```
 
-- To run _Securify2_ on individual contracts, use:  
+- To run _Securify2_ on individual contracts:  
 ```
 sudo docker run -it -v ECF_DIR:/share securify /share/CONTRACT_FILE.sol
 ```
+where `CONTRACT_FILE.sol` is the the solidity file describing the contract.
 
-- To run _Securify2_ on all of the mini benchmarks, use:  
+- To run _Securify2_ on all of the mini benchmarks:  
 ```
 sudo docker run -it -v ECF_DIR/MiniBenchmarks:/share securify /share/ex1_ecf/ex1_ECF.sol >& securify.1ecf.txt
 sudo docker run -it -v ECF_DIR/MiniBenchmarks:/share securify /share/ex2_ecf/ex2_ECF.sol >& securify.2ecf.txt
@@ -216,7 +220,7 @@ sudo docker run -it -v ECF_DIR/MiniBenchmarks/DAO:/share securify /share/Origina
 sudo docker run -it -v ECF_DIR/MiniBenchmarks/DAO:/share securify /share/OriginalExampleJustifyRevertsInSuffix/OriginalExampleJustifyRevertsInSuffix.sol >& securify.original.example.justify.reverts.in.suffix.txt
 ```
 
-- To run _Securify2_ on the subset of compatible contracts out of the Top150 benchmark, run:
+- To run _Securify2_ on the subset of compatible contracts out of the Top150 benchmark:
 ```
 sudo docker run -it -v ECF_DIR/Top150Benchmarks:/share securify /share/0x174bfa6600bf90c885c7c01c7031389ed1461ab9.sol >& securify.0x174bfa6600bf90c885c7c01c7031389ed1461ab9.txt 
 sudo docker run -it -v ECF_DIR/Top150Benchmarks:/share securify /share/0x5e07b6f1b98a11f7e04e7ffa8707b63f1c177753.sol >& securify.0x5e07b6f1b98a11f7e04e7ffa8707b63f1c177753.txt 
