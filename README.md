@@ -1,6 +1,6 @@
 ﻿# Artifact for the paper "Taming Callbacks for Smart Contract Modularity"
 
-## ECF static checker
+## ECF static checker - Getting Started Guide
 This document describes how to run the ECF Checker installed in the VM provided.
 The ECF Checker analyzes EVM bytecode and may accept either raw bytecode or Solidity files.
 
@@ -32,10 +32,22 @@ An additional output JSON file will provide additional information about each ca
 #### General run instructions
 To run the artifact on a bytecode file `FILE`, run the following command:
 ```ecf FILE```
-To run on a solidity file `FILE.sol`:
-```ecf FILE.sol "-solc solcX.YY"```
+To run on a solidity file `FILE.sol` on a contract named `CONTRACT`:
+```ecf FILE.sol "-solc solcX.YY -subContract CONTRACT"```
 where `X.YY` is the required version of the Solidity compiler, either 4.25, 5.16, or 6.12. 
 If another version is required it can be fetched from the releases page of the Solidity compiler repository: https://github.com/ethereum/solidity/releases.
+
+### Basic testing
+
+- By running `~/ecf/MiniBenchmarks/DAO/OriginalExample/run.sh` the expected output is:
+```
+..
+```
+
+- By running `ecf ~/ecf/MiniBenchmarks/DAO/OriginalExampleFix/run.sh` the expected output is:
+```
+..
+```
 
 #### Tweaking parameters
 Parameters that can be tweaked in the `ecf` script are:  
