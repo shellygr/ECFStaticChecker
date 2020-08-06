@@ -30,12 +30,17 @@ To run the artifact on a bytecode file `FILE`, run the following command:
 ```ecf FILE```
 
 To run on a solidity file `FILE.sol` on a contract named `CONTRACT`:
-```ecf FILE.sol "-solc solcX.YY -subContract CONTRACT"```
+```
+ecf FILE.sol "-solc solcX.YY -subContract CONTRACT"
+```
 where `X.YY` is the required version of the Solidity compiler, either 4.25, 5.12, 5.16, or 6.12. 
 If another version is required it can be fetched from the releases page of the Solidity compiler repository: https://github.com/ethereum/solidity/releases.
 
 If the solidity file contains imports, that is, depends on other solidity files, configuring the build might be more complicated.
 However sources fetched from https://etherscan.com are flattened and thus the build process should be straight-forward.
+
+A run of `ecf` will generate an `ecf_*.json` file. 
+These `json` files were used to collect more detailed statistics about the Top150 benchmark as presented in Appendix B.
 
 ### Basic testing
 
