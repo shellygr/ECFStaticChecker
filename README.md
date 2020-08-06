@@ -6,7 +6,7 @@ The ECF Checker analyzes EVM bytecode and may accept either raw bytecode or Soli
 
 **The tool is provided as a docker image available from: shellyg/ecf-static-checker**
 To get the tool, run: `docker pull shellyg/ecf-static-checker`
-To start the container run: `docker run -it ecf-static-checker`.
+To start the container run: `docker run -it shellyg/ecf-static-checker`.
 
 The container comes packaged with:
 
@@ -165,11 +165,12 @@ with `X.YY` standing for the Solidity version.
 
 - To run _Slither_ on the contracts in the mini benchmark set, run:
 ```
+/share/runSlitherMini.sh
 ```
 
 - To run _Slither_ on all compatible contracts in the Top150 benchmark, run the script:
 ```
-/share/runWithSourceSlither.sh
+/share/runSlitherTop150.sh
 ```
 
 
