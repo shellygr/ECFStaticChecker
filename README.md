@@ -4,11 +4,11 @@
 This document describes how to run the ECF Checker.
 The ECF Checker analyzes EVM bytecode and may accept either raw bytecode or Solidity files.
 
-**The tool is provided as a docker image available from: shellyg/ecf-static-checker (tag 1)**
+**The tool is provided as a docker image available from: shellyg/ecf-static-checker:1**
 
-To get the tool, run: `docker pull shellyg/ecf-static-checker`
+To get the tool, run: `docker pull shellyg/ecf-static-checker:1`
 
-To start the container run: `docker run -it shellyg/ecf-static-checker`.
+To start the container, run: `docker run -it shellyg/ecf-static-checker:1`.
 
 The container comes packaged with:
 
@@ -55,7 +55,7 @@ These `json` files were used to collect more detailed statistics about the Top15
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 ```
 
-- By running `ecf ~/ecf/MiniBenchmarks/DAO/OriginalExampleFix/run.sh` the expected output is:
+- By running `cd ~/ecf/MiniBenchmarks/DAO/OriginalExampleFix/; ./run.sh` the expected output is:
 ```
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
@@ -106,7 +106,7 @@ ecf ecf/Top150Benchmarks/XXX.sol "-solc solcX.YY -subContract NAME_OF_CONTRACT_I
 where `NAME_OF_CONTRACT_IN_XXX` should be a contract declared in `XXX.sol` and `solcX.YY` should match the declared pragma version in `XXX.sol`.
 
 For example, we can run on the contract with address 0xb363a3c584b1f379c79fbf09df015da5529d4dac either directly on the bytecode or with Solidity sources.
-If we run with the bytecode only like this: `ecf ecf/Top150Benchmarks/0xb363a3c584b1f379c79fbf09df015da5529d4dac.bin-runtime`
+If we run with the bytecode only like this: `ecf ~/ecf/Top150Benchmarks/0xb363a3c584b1f379c79fbf09df015da5529d4dac.bin-runtime`
 we get the output:
 ```
 Results for 0xb363a3c584b1f379c79fbf09df015da5529d4dac:
@@ -124,7 +124,7 @@ Results for 0xb363a3c584b1f379c79fbf09df015da5529d4dac:
 ```
 Indicating that the methods identified by the 4-byte sighashes (See explanation at https://www.4byte.directory/) 0x90cebff and 0x3f55b895 may be vulnerable to reentrancy attacks.
 
-But if we run with the sources like this: `ecf ecf/Top150Benchmarks/0xb363a3c584b1f379c79fbf09df015da5529d4dac.sol "-solc solc4.25 -subContract MiracleTeleToken"`
+But if we run with the sources like this: `ecf ~/ecf/Top150Benchmarks/0xb363a3c584b1f379c79fbf09df015da5529d4dac.sol "-solc solc4.25 -subContract MiracleTeleToken"`
 we get the output:
 ```
 Results for MiracleTeleToken:
