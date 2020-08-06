@@ -46,7 +46,6 @@ However sources fetched from https://etherscan.com are flattened and thus the bu
 |Bank-deposit()                          |Not violated |..        |                                                            |                                                  |
 |Bank-withdraw()                         |Violated     |..        |                                                            |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
-
 ```
 
 - By running `ecf ~/ecf/MiniBenchmarks/DAO/OriginalExampleFix/run.sh` the expected output is:
@@ -88,19 +87,56 @@ To run on any individual contract from the Top150 benchmark, run:
 ```
 ecf ecf/Top150Benchmarks/XXX.bin-runtime
 ```
-Running on all 150 contracts takes a long time.
+Where `XXX` is a string that represents the address of the contract.
+Note that running on all 150 contracts takes a long time.
 
 If available, it is possible to run on the Solidity file matching a bytecode file. The output is then human readable.
 To do so, run:
 ```
-ecf ecf/Top150Benchmarks/XXX.sol "-subContract NAME_OF_CONTRACT_IN_XXX -solc solcX.YY"
+ecf ecf/Top150Benchmarks/XXX.sol "-solc solcX.YY -subContract NAME_OF_CONTRACT_IN_XXX "
 ```
 where `NAME_OF_CONTRACT_IN_XXX` should be a contract declared in `XXX.sol` and `solcX.YY` should match the declared pragma version in `XXX.sol`.
 
+For example, we can run on the contract with address 0xb363a3c584b1f379c79fbf09df015da5529d4dac either directly on the bytecode or with Solidity sources.
+If we run with the bytecode only like this: `ecf ecf/Top150Benchmarks/0xb363a3c584b1f379c79fbf09df015da5529d4dac.bin-runtime`
+we get the output:
+```
+Results for 0xb363a3c584b1f379c79fbf09df015da5529d4dac:
+    Result for 0xb363a3c584b1f379c79fbf09df015da5529d4dac-95ea7b3(): V
+    Result for 0xb363a3c584b1f379c79fbf09df015da5529d4dac-21670f22(): V
+    Result for 0xb363a3c584b1f379c79fbf09df015da5529d4dac-23b872dd(): V
+    Result for 0xb363a3c584b1f379c79fbf09df015da5529d4dac-645ac00b(): V
+    Result for 0xb363a3c584b1f379c79fbf09df015da5529d4dac-751c4d70(): V
+    Result for 0xb363a3c584b1f379c79fbf09df015da5529d4dac-a0712d68(): V
+    Result for 0xb363a3c584b1f379c79fbf09df015da5529d4dac-a4e3374b(): V
+    Result for 0xb363a3c584b1f379c79fbf09df015da5529d4dac-a9059cbb(): V
+    Result for 0xb363a3c584b1f379c79fbf09df015da5529d4dac-f2fde38b(): V
+    Result for 0xb363a3c584b1f379c79fbf09df015da5529d4dac-90cebff(): X
+    Result for 0xb363a3c584b1f379c79fbf09df015da5529d4dac-3f55b895(): X
+```
+Indicating that the methods identified by the 4-byte sighashes (See explanation at https://www.4byte.directory/) 0x90cebff and 0x3f55b895 may be vulnerable to reentrancy attacks.
+
+But if we run with the sources like this: `ecf ecf/Top150Benchmarks/0xb363a3c584b1f379c79fbf09df015da5529d4dac.sol "-solc solc4.25 -subContract MiracleTeleToken"`
+we get the output:
+```
+Results for MiracleTeleToken:
+    Result for MiracleTeleToken-approve(address,uint256): V
+    Result for MiracleTeleToken-reward(address,uint256): V
+    Result for MiracleTeleToken-transferFrom(address,address,uint256): V
+    Result for MiracleTeleToken-transferSignership(address): V
+    Result for MiracleTeleToken-contributeDelegated(address,uint256): V
+    Result for MiracleTeleToken-mint(uint256): V
+    Result for MiracleTeleToken-transferDelegated(address,address,uint256): V
+    Result for MiracleTeleToken-transfer(address,uint256): V
+    Result for MiracleTeleToken-transferOwnership(address): V
+    Result for MiracleTeleToken-unDelegate(uint8,bytes32,bytes32): X
+    Result for MiracleTeleToken-delegate(uint8,bytes32,bytes32): X
+```
+Where it becomes clear the two suspected non-ECF functions are `unDelegate` and `delegate`. (These methods would be vulnerable if precompiled contracts allowed reentrancy, which is not the case).
 
 ### Running the comparative benchmarks
 Simple installation instructions using docker are provided below.
-The instructions assume the artifact's git repository is locally cloned into `ECF_DIR`.
+The instructions assume the artifact's git repository is locally cloned into `ECF_DIR` (full path should be given as argument to docker).
 
 #### _Slither_
 _Slither_ can only be run on contracts with source whose supported compiler version is packaged with _Slither_'s docker container.
